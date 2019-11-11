@@ -1,15 +1,12 @@
 ﻿using System;
 using AdventOfCode.Solvers;
 
-namespace AdventOfCode
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
+namespace AdventOfCode {
+    class Program {
+        static void Main(string[] args) {
             Console.WriteLine("Hello World!");
             Solver s = new Day00Solver();
-            Console.WriteLine(s.IsTrue());
+            Console.WriteLine(s.SolvePartOne("a"));
         }
     }
 }

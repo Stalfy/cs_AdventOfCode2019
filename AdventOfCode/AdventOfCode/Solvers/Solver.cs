@@ -1,5 +1,6 @@
 namespace AdventOfCode.Solvers {
     public interface Solver {
-        public bool IsTrue();
+        public string SolvePartOne(string input);
+        public string SolvePartTwo(string input);
     }
 }
