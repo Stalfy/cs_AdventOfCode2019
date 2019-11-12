@@ -17,7 +17,15 @@ namespace AdventOfCode.Tests {
         public void TestPartOne(string expected, string input) {
             Solver s = new Day00Solver();
             string result = s.SolvePartOne(input);
-            Assert.That(expected, Is.EqualTo(result));
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [TestCase("1", ")")]
+        [TestCase("5", "()())")]
+        public void TestPartTwo(string expected, string input) {
+            Solver s = new Day00Solver();
+            string result = s.SolvePartTwo(input);
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

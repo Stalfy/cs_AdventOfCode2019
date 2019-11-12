@@ -6,7 +6,7 @@ namespace AdventOfCode {
         static void Main(string[] args) {
             Console.WriteLine("Hello World!");
             Solver s = new Day00Solver();
-            Console.WriteLine(s.SolvePartOne("a"));
+            Console.WriteLine(s.SolvePartTwo("()())"));
         }
     }
 }
