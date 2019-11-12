@@ -16,4 +16,9 @@
     <ProjectReference Include="..\AdventOfCode\AdventOfCode.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+      <None Update="artifacts\*" CopyToOutputDirectory="PreserveNewest" />
+      <None Update="artifacts\*\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
