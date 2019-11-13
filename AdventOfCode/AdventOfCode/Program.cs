@@ -42,7 +42,6 @@ namespace AdventOfCode {
                 return -1;
             }
 
-
             Console.WriteLine("Part 1: {0}.", s.SolvePartOne(input));
             Console.WriteLine("Part 2: {0}.", s.SolvePartTwo(input));
             return 0;
