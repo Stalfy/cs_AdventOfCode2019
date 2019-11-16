@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -42,8 +43,26 @@ namespace AdventOfCode {
                 return -1;
             }
 
-            Console.WriteLine("Part 1: {0}.", s.SolvePartOne(input));
-            Console.WriteLine("Part 2: {0}.", s.SolvePartTwo(input));
+            Stopwatch stopwatch = new Stopwatch();
+            TimeSpan ts;
+            String answer;
+
+            stopwatch.Start();
+            answer = s.SolvePartOne(input);
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+
+            Console.WriteLine("Part 1: {0}", answer);
+            Console.WriteLine("Time 1: {0:00}.{1:000} seconds.", ts.Seconds, ts.Milliseconds);
+
+            stopwatch.Restart();
+            answer = s.SolvePartTwo(input);
+            stopwatch.Stop();
+            ts = stopwatch.Elapsed;
+
+            Console.WriteLine("Part 2: {0}", answer);
+            Console.WriteLine("Time 2: {0:00}.{1:000} seconds.", ts.Seconds, ts.Milliseconds);
+
             return 0;
         }
 
