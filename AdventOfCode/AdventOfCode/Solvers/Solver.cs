@@ -1,6 +1,6 @@
 namespace AdventOfCode.Solvers {
-    public interface Solver {
-        public string SolvePartOne(string[] input);
-        public string SolvePartTwo(string[] input);
-    }
+  public interface Solver {
+    public string SolvePartOne(string[] input);
+    public string SolvePartTwo(string[] input);
+  }
 }
