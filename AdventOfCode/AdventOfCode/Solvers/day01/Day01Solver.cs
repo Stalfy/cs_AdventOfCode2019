@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solvers {
   public class Day01Solver : Solver {
