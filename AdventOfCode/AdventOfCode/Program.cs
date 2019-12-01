@@ -8,7 +8,7 @@ using AdventOfCode.Reader;
 
 namespace AdventOfCode {
   class Program {
-    const byte MAX_DAY = 0;
+    const byte MAX_DAY = 1;
 
     static public int Main(string[] args) {
       if(1 != args.Length) {
@@ -53,7 +53,7 @@ namespace AdventOfCode {
       ts = stopwatch.Elapsed;
 
       Console.WriteLine("Part 1: {0}", answer);
-      Console.WriteLine("Time 1: {0:00}.{1:000} seconds.", ts.Seconds, ts.Milliseconds);
+      Console.WriteLine("Time 1: {0:00}.{1:D3} seconds.", ts.Seconds, ts.Milliseconds);
 
       stopwatch.Restart();
       answer = s.SolvePartTwo(input);
@@ -61,7 +61,7 @@ namespace AdventOfCode {
       ts = stopwatch.Elapsed;
 
       Console.WriteLine("Part 2: {0}", answer);
-      Console.WriteLine("Time 2: {0:00}.{1:000} seconds.", ts.Seconds, ts.Milliseconds);
+      Console.WriteLine("Time 2: {0:00}.{1:D3} seconds.", ts.Seconds, ts.Milliseconds);
 
       return 0;
     }
