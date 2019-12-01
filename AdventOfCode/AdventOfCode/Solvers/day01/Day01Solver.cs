@@ -10,7 +10,17 @@ namespace AdventOfCode.Solvers {
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      int fuel = input.Aggregate(0, (acc, x) => acc + RequiredFuel(Int32.Parse(x)));
+      return fuel.ToString();
+    }
+
+    public int RequiredFuel(int x) {
+      if (0 == x) {
+        return 0;
+      }
+
+      int requiredFuel = Math.Max(0, x / 3 - 2);
+      return requiredFuel + RequiredFuel(requiredFuel);
     }
   }
 }
