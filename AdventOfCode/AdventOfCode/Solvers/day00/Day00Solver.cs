@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solvers {
   public class Day00Solver : Solver {
@@ -15,20 +16,13 @@ namespace AdventOfCode.Solvers {
 
     public string SolvePartTwo(string[] input) {
       string str = string.Join("", input);
-      int floor = 0;
-      int i = 0;
+      int i = 1;
 
-      Dictionary<char, int> dict = new Dictionary<char, int>();
-      dict.Add('(', 1);
-      dict.Add(')', -1);
+      Regex regex = new Regex(Regex.Escape("()"));
 
-      int v;
-      while(floor != -1 && i < str.Length) {
-        if(dict.TryGetValue(str[i], out v)) {
-          floor += v;
-        }
-
-        i++;
+      while(')' != str[0]) {
+        str = regex.Replace(str, "", 1);
+        i += 2;
       }
 
       return i.ToString();
