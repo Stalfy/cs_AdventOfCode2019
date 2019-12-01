@@ -16,6 +16,7 @@ namespace AdventOfCode.Tests {
       Assert.That(result, Is.EqualTo(expected));
     }
 
+    /*
     [TestCase("2", new string[] { "14" })]
     [TestCase("966", new string[] { "1969" })]
     [TestCase("50346", new string[] { "100756" })]
@@ -24,5 +25,6 @@ namespace AdventOfCode.Tests {
       string result = s.SolvePartTwo(input);
       Assert.That(result, Is.EqualTo(expected));
     }
+    */
   }
 }
