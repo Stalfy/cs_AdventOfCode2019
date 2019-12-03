@@ -12,17 +12,36 @@ namespace AdventOfCode.Solvers {
         .Select(x => Int32.Parse(x))
         .ToArray();
 
-
-      program[1] = 12;
-      program[2] = 2;
-
-      IntcodeComputer ic = new IntcodeComputer();
-      int[] compiledProgram = ic.Compile(program);
-      return program[0].ToString();
+      int[] compiledProgram = CompileWithNounAndVerb(program, 12, 2);
+      return compiledProgram[0].ToString();
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      int[] prog = string.Join(",", input)
+        .Split(new char[] { ',' })
+        .Select(x => Int32.Parse(x))
+        .ToArray();
+
+      int desired = 19690720;
+      int[] compiled = (int[]) prog.Clone();
+
+      int noun = 0;
+      int verb = 0;
+      for(noun = 0; desired != compiled[0] && noun <= 99; noun++) {
+        for(verb = 0; desired != compiled[0] && verb <= 99; verb++) {
+          compiled = CompileWithNounAndVerb((int[]) prog.Clone(), noun, verb);
+        } 
+      }
+
+      return (100 * --noun + --verb).ToString();
+    }
+
+    private int[] CompileWithNounAndVerb(int[] program, int noun, int verb) {
+      program[1] = noun;
+      program[2] = verb;
+
+      IntcodeComputer ic = new IntcodeComputer();
+      return ic.Compile(program);
     }
   }
 }
