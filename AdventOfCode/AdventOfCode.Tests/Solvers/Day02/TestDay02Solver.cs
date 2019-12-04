@@ -5,7 +5,7 @@ using AdventOfCode.Solvers;
 using System;
 using System.Text;
 namespace AdventOfCode.Tests {
-  public class TestDay02Solver {
+  public class Day02SolverTests {
     [TestCase("5", new string[] { "1,0,0,0,99,0,0,0,0,0,0,0,3" })]
     [TestCase("6", new string[] { "2,0,0,0,99,0,0,0,0,0,0,0,3" })]
     public void TestPartOne(string expected, string[] input) {

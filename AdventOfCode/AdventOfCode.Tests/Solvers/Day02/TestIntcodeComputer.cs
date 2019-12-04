@@ -3,7 +3,7 @@ using NUnit.Framework;
 using AdventOfCode.Solvers.Day02;
 
 namespace AdventOfCode.Tests {
-  public class TestIntcodeComputer {
+  public class IntcodeComputerTests {
 
     [Test]
     public void TestCompileOpcode1() {

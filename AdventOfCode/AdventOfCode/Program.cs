@@ -8,7 +8,7 @@ using AdventOfCode.Reader;
 
 namespace AdventOfCode {
   class Program {
-    const byte MAX_DAY = 2;
+    const byte MAX_DAY = 3;
 
     static public int Main(string[] args) {
       if(1 != args.Length) {
