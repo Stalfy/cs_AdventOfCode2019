@@ -18,7 +18,7 @@ namespace AdventOfCode.Solvers {
 
     public string SolvePartTwo(string[] input) {
       int[] prog = string.Join(",", input)
-        .Split(new char[] { ',' })
+        .Split(",")
         .Select(x => Int32.Parse(x))
         .ToArray();
 
