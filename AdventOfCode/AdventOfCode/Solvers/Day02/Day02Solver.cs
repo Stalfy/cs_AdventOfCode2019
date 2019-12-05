@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using AdventOfCode.Solvers.Day02;
-
 namespace AdventOfCode.Solvers {
   public class Day02Solver : Solver {
     public string SolvePartOne(string[] input) {

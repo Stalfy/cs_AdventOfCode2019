@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-using AdventOfCode.Solvers.Day02;
+using AdventOfCode.Solvers;
 
 namespace AdventOfCode.Tests {
   public class IntcodeComputerTests {
