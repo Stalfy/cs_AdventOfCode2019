@@ -8,7 +8,7 @@ using AdventOfCode.Reader;
 
 namespace AdventOfCode {
   class Program {
-    const byte MAX_DAY = 3;
+    const byte MAX_DAY = 4;
 
     static public int Main(string[] args) {
       if(1 != args.Length) {
@@ -27,8 +27,8 @@ namespace AdventOfCode {
         return -1;
       }
 
-      string fileName = string.Format("day{0:D2}.txt", day);
-      string filePath = Path.Combine("AdventOfCode", "puzzles", fileName);
+      string fileName = string.Format("Day{0:D2}.txt", day);
+      string filePath = Path.Combine("AdventOfCode", "Puzzles", fileName);
 
       PuzzleInputReader reader = new PuzzleInputReader();
       string[] input;
