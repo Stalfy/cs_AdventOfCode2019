@@ -7,7 +7,7 @@ namespace AdventOfCode.Tests {
     [Test]
     public void TestValidNumber() {
       PasswordScanner ps = new PasswordScanner();
-      Assert.That(ps.IsPasswordValid(112345), Is.EqualTo(true));
+      Assert.That(ps.IsPasswordValid(112345), Is.EqualTo(false));
     }
   }
 }

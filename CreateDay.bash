@@ -15,18 +15,18 @@ mkdir -p $SOLVER_DIR
 mkdir -p $TEST_DIR
 
 # Create solver file.
-echo "namespace AdventOfCode.Solvers {"                  >> $SOLVER_PATH
-echo "  public class Day$1Solver : Solver {"             >> $SOLVER_PATH
-echo ""                                                  >> $SOLVER_PATH
-echo "    public string SolverPartOne(string[] input) {" >> $SOLVER_PATH
-echo "      return \"\";"                                >> $SOLVER_PATH
-echo "    }"                                             >> $SOLVER_PATH
-echo ""                                                  >> $SOLVER_PATH
-echo "    public string SolverPartTwo(string[] input) {" >> $SOLVER_PATH
-echo "      return \"\";"                                >> $SOLVER_PATH
-echo "    }"                                             >> $SOLVER_PATH
-echo "  }"                                               >> $SOLVER_PATH
-echo "}"                                                 >> $SOLVER_PATH
+echo "namespace AdventOfCode.Solvers {"                 >> $SOLVER_PATH
+echo "  public class Day$1Solver : Solver {"            >> $SOLVER_PATH
+echo ""                                                 >> $SOLVER_PATH
+echo "    public string SolvePartOne(string[] input) {" >> $SOLVER_PATH
+echo "      return \"\";"                               >> $SOLVER_PATH
+echo "    }"                                            >> $SOLVER_PATH
+echo ""                                                 >> $SOLVER_PATH
+echo "    public string SolvePartTwo(string[] input) {" >> $SOLVER_PATH
+echo "      return \"\";"                               >> $SOLVER_PATH
+echo "    }"                                            >> $SOLVER_PATH
+echo "  }"                                              >> $SOLVER_PATH
+echo "}"                                                >> $SOLVER_PATH
 
 # Create test file.
 echo "using NUnit.Framework;"                                         >> $TEST_PATH

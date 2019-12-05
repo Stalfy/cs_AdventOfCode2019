@@ -1,11 +1,11 @@
 namespace AdventOfCode.Solvers {
   public class Day04Solver : Solver {
 
-    public string SolverPartOne(string[] input) {
+    public string SolvePartOne(string[] input) {
       return "";
     }
 
-    public string SolverPartTwo(string[] input) {
+    public string SolvePartTwo(string[] input) {
       return "";
     }
   }

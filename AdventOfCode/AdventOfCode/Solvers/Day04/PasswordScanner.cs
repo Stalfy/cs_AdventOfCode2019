@@ -1,3 +1,5 @@
+using System;
+
 namespace AdventOfCode.Solvers.Day04 {
   public class PasswordScanner {
     public bool IsPasswordValid(int password) {
