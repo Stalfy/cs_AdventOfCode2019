@@ -28,9 +28,9 @@ namespace AdventOfCode.Solvers {
       int d2 = 0;
       int lowestSteps = Int32.MaxValue;
       foreach (Point p in intersections) {
-       d1 = GetWireStepsFromIntersection(p, wire1Points);
-       d2 = GetWireStepsFromIntersection(p, wire2Points);
-       lowestSteps = Math.Min(lowestSteps, d1 + d2);
+        d1 = GetWireStepsFromIntersection(p, wire1Points);
+        d2 = GetWireStepsFromIntersection(p, wire2Points);
+        lowestSteps = Math.Min(lowestSteps, d1 + d2);
       }
 
       return lowestSteps.ToString();
@@ -113,10 +113,10 @@ namespace AdventOfCode.Solvers {
       Point p1 = points[i];
       Point p2 = points[i + 1];
       while (i < points.Count - 1 && false == IsIntersectionOnSegment(q, p1, p2)) {
-         steps += Math.Abs(p2.X - p1.X) + Math.Abs(p2.Y - p1.Y);
-         i++;
-         p1 = points[i];
-         p2 = points[i + 1];
+        steps += Math.Abs(p2.X - p1.X) + Math.Abs(p2.Y - p1.Y);
+        i++;
+        p1 = points[i];
+        p2 = points[i + 1];
       }
 
       return steps + Math.Abs(q.X - p1.X) + Math.Abs(q.Y - p1.Y);
@@ -126,15 +126,15 @@ namespace AdventOfCode.Solvers {
       if (q.X == p1.X && q.X == p2.X && p1.Y < q.Y && q.Y < p2.Y) {
         return true;
       }
-      
+
       if (q.X == p1.X && q.X == p2.X && p1.Y > q.Y && q.Y > p2.Y) {
         return true;
       }
-      
+
       if (q.Y == p1.Y && q.Y == p2.Y && p1.X < q.X && q.X < p2.X) {
         return true;
       }
-      
+
       if (q.Y == p1.Y && q.Y == p2.Y && p1.X > q.X && q.X > p2.X) {
         return true;
       }
