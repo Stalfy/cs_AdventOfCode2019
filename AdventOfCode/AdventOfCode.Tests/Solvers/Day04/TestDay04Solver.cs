@@ -12,6 +12,7 @@ namespace AdventOfCode.Tests {
       Assert.That(result, Is.EqualTo(expected));
     }
 
+    [TestCase("2", new string[] { "111443-111446" })]
     public void TestPartTwo(string expected, string[] input) {
       Solver s = new Day04Solver();
       string result = s.SolvePartTwo(input);

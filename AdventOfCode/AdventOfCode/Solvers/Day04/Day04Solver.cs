@@ -20,7 +20,17 @@ namespace AdventOfCode.Solvers {
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      string[] range = input[0].Split("-");
+      int validPasswords = 0;
+
+      PasswordScanner ps = new PasswordScanner();
+      for(int i = Int32.Parse(range[0]); i <= Int32.Parse(range[1]); i++) {
+        if(ps.IsValidPassword2(i)) {
+          validPasswords++;
+        }
+      }
+
+      return validPasswords.ToString();
     }
   }
 }

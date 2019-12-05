@@ -33,6 +33,9 @@ namespace AdventOfCode.Tests {
     public void TestPartTwoInvalidNumber() {
       PasswordScanner ps = new PasswordScanner();
       Assert.That(ps.IsValidPassword2(123444), Is.EqualTo(false));
+      Assert.That(ps.IsValidPassword2(124445), Is.EqualTo(false));
+      Assert.That(ps.IsValidPassword2(111443), Is.EqualTo(false));
+      Assert.That(ps.IsValidPassword2(111444), Is.EqualTo(false));
     }
   }
 }
