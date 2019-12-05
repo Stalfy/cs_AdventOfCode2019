@@ -15,6 +15,8 @@ mkdir -p $SOLVER_DIR
 mkdir -p $TEST_DIR
 
 # Create solver file.
+echo "using System;"                                    >> $SOLVER_PATH
+echo ""                                                 >> $SOLVER_PATH
 echo "namespace AdventOfCode.Solvers {"                 >> $SOLVER_PATH
 echo "  public class Day$1Solver : Solver {"            >> $SOLVER_PATH
 echo ""                                                 >> $SOLVER_PATH
