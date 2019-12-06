@@ -22,7 +22,7 @@ namespace AdventOfCode.Solvers {
       Output = 0;
     }
 
-    public int[] Compile(int[] prog) {
+    public bool Compile(int[] prog) {
       int idx = 0;
       int opcode = 0;
       int[] parameterModes = new int[2];
@@ -35,7 +35,7 @@ namespace AdventOfCode.Solvers {
         idx = operations[prog[idx]](prog, idx, parameterModes);
       } while (99 != opcode && 0 == Output);
 
-      return prog;
+      return 99 == opcode;
     }
 
     private int AddOperation(int[] prog, int idx, int[] modes) {
