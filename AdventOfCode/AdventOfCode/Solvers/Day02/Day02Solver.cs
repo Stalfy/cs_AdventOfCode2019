@@ -5,20 +5,16 @@ using System.Linq;
 namespace AdventOfCode.Solvers {
   public class Day02Solver : Solver {
     public string SolvePartOne(string[] input) {
-      int[] program = string.Join(",", input)
-        .Split(new char[] { ',' })
-        .Select(x => Int32.Parse(x))
-        .ToArray();
+      int[] program = string.Join(",", input).Split(",")
+        .Select(x => Int32.Parse(x)).ToArray();
 
       CompileWithNounAndVerb(program, 12, 2);
       return program[0].ToString();
     }
 
     public string SolvePartTwo(string[] input) {
-      int[] prog = string.Join(",", input)
-        .Split(",")
-        .Select(x => Int32.Parse(x))
-        .ToArray();
+      int[] prog = string.Join(",", input).Split(",")
+        .Select(x => Int32.Parse(x)).ToArray();
 
       int desired = 19690720;
       int noun = 0;

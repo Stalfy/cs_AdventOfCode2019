@@ -20,19 +20,10 @@ namespace AdventOfCode.Tests {
     [TestCase(5, 20, new int[] { 102, 4, 3, 5, 99, 0 })]
     [TestCase(5, 20, new int[] { 1002, 3, 4, 5, 99, 0 })]
     [TestCase(5, 16, new int[] { 1102, 4, 4, 5, 99, 0 })]
-    public void TestCompileOpcode2(int index, int expected, int[] program) {
+    public void TestCompileMultiplyOperation(int index, int expected, int[] program) {
       IntcodeComputer ic = new IntcodeComputer();
       Assert.That(ic.Compile(program), Is.EqualTo(true));
       Assert.That(program[index], Is.EqualTo(expected));
-    }
-
-    [Test]
-    public void TestCompileChain() {
-      IntcodeComputer ic = new IntcodeComputer();
-      int[] program = new int[] { 1, 1, 1, 4, 99, 5, 6, 0, 99 };
-      Assert.That(ic.Compile(program), Is.EqualTo(true));
-      Assert.That(program[0], Is.EqualTo(30));
-      Assert.That(program[4], Is.EqualTo(2));
     }
 
     [Test]
@@ -49,6 +40,23 @@ namespace AdventOfCode.Tests {
       int[] program = new int[] { 4, 3, 99, 200 };
       Assert.That(ic.Compile(program), Is.EqualTo(true));
       Assert.That(ic.Output, Is.EqualTo(200));
+    }
+
+    [Test]
+    public void TestCompileChain() {
+      IntcodeComputer ic = new IntcodeComputer();
+      int[] program = new int[] { 1, 1, 1, 4, 99, 5, 6, 0, 99 };
+      Assert.That(ic.Compile(program), Is.EqualTo(true));
+      Assert.That(program[0], Is.EqualTo(30));
+      Assert.That(program[4], Is.EqualTo(2));
+    }
+
+    [Test]
+    public void TestFailingCompilation() {
+      IntcodeComputer ic = new IntcodeComputer();
+      int[] program = new int[] { 4, 0, 4, 1, 99 };
+      Assert.That(ic.Compile(program), Is.EqualTo(false));
+      Assert.That(ic.Output, Is.EqualTo(4));
     }
   }
 }
