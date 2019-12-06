@@ -34,7 +34,7 @@ namespace AdventOfCode.Solvers {
       program[1] = noun;
       program[2] = verb;
 
-      IntcodeComputer ic = new IntcodeComputer();
+      IntcodeComputer ic = new IntcodeComputer(1);
       ic.Compile(program);
     }
   }

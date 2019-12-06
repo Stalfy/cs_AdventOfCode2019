@@ -3,16 +3,22 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Solvers {
   public class IntcodeComputer {
-    private Dictionary<int, Func<int[], int, int[], int>> operations;
-    private Dictionary<int, Func<int[], int, int>> getters;
     public int Output { get; set; }
 
-    public IntcodeComputer() {
+    private Dictionary<int, Func<int[], int, int[], int>> operations;
+    private Dictionary<int, Func<int[], int, int>> getters;
+    private int Input;
+
+    public IntcodeComputer(int input) {
       operations = new Dictionary<int, Func<int[], int, int[], int>>(); 
       operations.Add(1, AddOperation);
       operations.Add(2, MultiplyOperation);
       operations.Add(3, InputOperation);
       operations.Add(4, OutputOperation);
+      operations.Add(5, JumpIfTrueOperation);
+      operations.Add(6, JumpIfFalseOperation);
+      operations.Add(7, LessThanOperation);
+      operations.Add(8, EqualsOperation);
       operations.Add(99, HaltOperation);
 
       getters = new Dictionary<int, Func<int[], int, int>>(); 
@@ -20,27 +26,24 @@ namespace AdventOfCode.Solvers {
       getters.Add(1, ImmediateModeGetter);
 
       Output = 0;
+      Input = input;
     }
 
     public bool Compile(int[] prog) {
       int idx = 0;
       int opcode = 0;
+
       int[] parameterModes = new int[2];
 
-      do {
+      while (99 != prog[idx]) {
         opcode = prog[idx] % 100;
         parameterModes[0] = (prog[idx] / 100) % 10;
         parameterModes[1] = (prog[idx] / 1000) % 10;
 
         idx = operations[opcode](prog, idx, parameterModes);
-      } while (99 != opcode && 0 == Output);
-
-      // Get final opcode if an output command was different from 0.
-      if(4 == opcode) {
-        opcode = prog[idx] % 100;
       }
 
-      return 99 == opcode;
+      return true;
     }
 
     private int AddOperation(int[] prog, int idx, int[] modes) {
@@ -54,13 +57,49 @@ namespace AdventOfCode.Solvers {
     }
 
     private int InputOperation(int[] prog, int idx, int[] modes) {
-      prog[prog[idx + 1]] = 1;
+      prog[prog[idx + 1]] = Input;
       return idx + 2;
     }
 
     private int OutputOperation(int[] prog, int idx, int[] modes) {
       Output = getters[modes[0]](prog, idx + 1);
       return idx + 2;
+    }
+
+    private int JumpIfTrueOperation(int[] prog, int idx, int[] modes) {
+      if (0 != getters[modes[0]](prog, idx + 1)) {
+        return getters[modes[1]](prog, idx + 2);
+      }
+
+      return idx + 3;
+    }
+
+    private int JumpIfFalseOperation(int[] prog, int idx, int[] modes) {
+      if (0 == getters[modes[0]](prog, idx + 1)) {
+        return getters[modes[1]](prog, idx + 2);
+      }
+
+      return idx + 3;
+    }
+
+    private int LessThanOperation(int[] prog, int idx, int[] modes) {
+      if (getters[modes[0]](prog, idx + 1) < getters[modes[1]](prog, idx + 2)) {
+        prog[prog[idx + 3]] = 1;
+      } else {
+        prog[prog[idx + 3]] = 0;
+      }
+
+      return idx + 4;
+    }
+
+    private int EqualsOperation(int[] prog, int idx, int[] modes) {
+      if (getters[modes[0]](prog, idx + 1) == getters[modes[1]](prog, idx + 2)) {
+        prog[prog[idx + 3]] = 1;
+      } else {
+        prog[prog[idx + 3]] = 0;
+      }
+
+      return idx + 4;
     }
 
     private int HaltOperation(int[] prog, int idx, int[] modes) {

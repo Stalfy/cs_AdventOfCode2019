@@ -8,7 +8,7 @@ namespace AdventOfCode.Solvers {
       int[] program = string.Join(",", input).Split(",")
         .Select(x => Int32.Parse(x)).ToArray();
 
-      IntcodeComputer ic = new IntcodeComputer();
+      IntcodeComputer ic = new IntcodeComputer(1);
 
       if(ic.Compile(program)) {
         return ic.Output.ToString();
@@ -20,7 +20,14 @@ namespace AdventOfCode.Solvers {
     public string SolvePartTwo(string[] input) {
       int[] program = string.Join(",", input).Split(",")
         .Select(x => Int32.Parse(x)).ToArray();
-      return "";
+
+      IntcodeComputer ic = new IntcodeComputer(5);
+
+      if(ic.Compile(program)) {
+        return ic.Output.ToString();
+      } else {
+        return (-1).ToString();
+      }
     }
   }
 }
