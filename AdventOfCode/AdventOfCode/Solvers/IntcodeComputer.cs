@@ -32,8 +32,13 @@ namespace AdventOfCode.Solvers {
         parameterModes[0] = (prog[idx] / 100) % 10;
         parameterModes[1] = (prog[idx] / 1000) % 10;
 
-        idx = operations[prog[idx]](prog, idx, parameterModes);
+        idx = operations[opcode](prog, idx, parameterModes);
       } while (99 != opcode && 0 == Output);
+
+      // Get final opcode if an output command was different from 0.
+      if(4 == opcode) {
+        opcode = prog[idx] % 100;
+      }
 
       return 99 == opcode;
     }
@@ -54,7 +59,7 @@ namespace AdventOfCode.Solvers {
     }
 
     private int OutputOperation(int[] prog, int idx, int[] modes) {
-      Output = getters[modes[0]](prog, idx);
+      Output = getters[modes[0]](prog, idx + 1);
       return idx + 2;
     }
 
