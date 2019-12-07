@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using AdventOfCode.Computer;
+
 namespace AdventOfCode.Solvers {
   public class Day02Solver : Solver {
     public string SolvePartOne(string[] input) {
@@ -34,8 +36,8 @@ namespace AdventOfCode.Solvers {
       program[1] = noun;
       program[2] = verb;
 
-      IntcodeComputer ic = new IntcodeComputer(1);
-      ic.Compile(program);
+      IntcodeComputer ic = new IntcodeComputer(program, 1);
+      ic.Run();
     }
   }
 }
