@@ -9,7 +9,8 @@ namespace AdventOfCode.Solvers {
 
     public string SolvePartOne(string[] input) {
       List<string[]> orbits = input.Select(x => x.Split(")")).ToList();
-      OrbitMap om = PopulateOrbitMap(orbits);
+      OrbitMap om = new OrbitMap();
+      om = PopulateOrbitMap("COM", om, orbits);
 
       return om.GetChecksum().ToString();
     }
@@ -18,21 +19,18 @@ namespace AdventOfCode.Solvers {
       return "";
     }
 
-    private OrbitMap PopulateOrbitMap(List<string[]> orbits) {
-      OrbitMap om = new OrbitMap();
-      while (0 != orbits.Count) {
-        int i = 0;
+    private OrbitMap PopulateOrbitMap(string oName, OrbitMap om, List<string[]> orbits) {
+      List<string[]> availableOrbits = orbits.Where(x => oName == x[0]).ToList();
 
-        while(i < orbits.Count) {
-          if(om.AddOrbit(orbits[i][0], orbits[i][1])) {
-            orbits.RemoveAt(i);
-          } else {
-            i++;
-          }
-        }
+      foreach (string[] orbit in availableOrbits) {
+          om.AddOrbit(orbit[0], orbit[1]);
+          PopulateOrbitMap(orbit[1], om, orbits);
+          orbits.Remove(orbit);
       }
 
       return om;
     }
+
+
   }
 }
