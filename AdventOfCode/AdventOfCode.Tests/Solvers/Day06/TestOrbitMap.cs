@@ -64,10 +64,11 @@ namespace AdventOfCode.Tests {
       Assert.That(om.AddOrbit("COM", "A"), Is.EqualTo(true));
       Assert.That(om.AddOrbit("A", "B"), Is.EqualTo(true));
       Assert.That(om.AddOrbit("B", "C"), Is.EqualTo(true));
-      Assert.That(om.AddOrbit("NOTFOUND", "D"), Is.EqualTo(false));
+      Assert.That(om.AddOrbit("C", "START"), Is.EqualTo(true));
+      Assert.That(om.AddOrbit("A", "END"), Is.EqualTo(true));
 
-      int checksum = om.GetChecksum();
-      Assert.That(checksum, Is.EqualTo(6));
+      Assert.That(om.GetOrbitalDistance("START", "END"), Is.EqualTo(2));
+      Assert.That(om.GetOrbitalDistance("END", "START"), Is.EqualTo(2));
     }
   }
 }

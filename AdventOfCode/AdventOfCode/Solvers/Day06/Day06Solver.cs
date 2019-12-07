@@ -16,7 +16,11 @@ namespace AdventOfCode.Solvers {
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      List<string[]> orbits = input.Select(x => x.Split(")")).ToList();
+      OrbitMap om = new OrbitMap();
+      om = PopulateOrbitMap("COM", om, orbits);
+
+      return om.GetOrbitalDistance("YOU", "SAN").ToString();
     }
 
     private OrbitMap PopulateOrbitMap(string oName, OrbitMap om, List<string[]> orbits) {
@@ -30,7 +34,5 @@ namespace AdventOfCode.Solvers {
 
       return om;
     }
-
-
   }
 }

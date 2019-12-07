@@ -6,11 +6,11 @@ namespace AdventOfCode.Solvers.Day06 {
   public class OrbitMap {
     private class Orbit {
       public int Depth { get; }
-      public string Center { get; }
+      public Orbit Center { get; }
       public string Name { get; }
       public List<Orbit> Children { get; set; }
 
-      public Orbit(int depth, string center, string name) {
+      public Orbit(int depth, Orbit center, string name) {
         Depth = depth;
         Center = center;
         Name = name;
@@ -21,14 +21,13 @@ namespace AdventOfCode.Solvers.Day06 {
     private Orbit Root;
 
     public OrbitMap() {
-      Root = new Orbit(0, "COM", "COM");
+      Root = new Orbit(0, null, "COM");
     }
 
-    public bool AddOrbit(string center, string name) {
-
-      Orbit o = GetOrbit(Root, center);
+    public bool AddOrbit(string target, string name) {
+      Orbit o = GetOrbit(Root, target);
       if (null != o) {
-        o.Children.Add(new Orbit(o.Depth + 1, center, name));
+        o.Children.Add(new Orbit(o.Depth + 1, o, name));
         return true;
       }
 
@@ -78,7 +77,34 @@ namespace AdventOfCode.Solvers.Day06 {
     }
 
     public int GetOrbitalDistance(string origin, string target) {
-      return 0;
+      Orbit o = GetOrbit(Root, origin);
+      List<string> originToCom = GetPathToCom(o);
+
+      o = GetOrbit(Root, target);
+      List<string> targetToCom = GetPathToCom(o);
+
+      int targetIndex;
+      for(int i = 0; i < originToCom.Count; i++) {
+
+        targetIndex = targetToCom.IndexOf(originToCom[i]);
+        if(-1 != targetIndex) {
+           return i + targetIndex;
+        }
+      }
+      
+      return -1;
+    }
+
+    private List<string> GetPathToCom(Orbit o) {
+      List<string> pathToCom = new List<string>();
+      
+      o = o.Center;
+      while (null != o) {
+        pathToCom.Add(o.Name);
+        o = o.Center;
+      }
+      
+      return pathToCom;
     }
   }
 }
