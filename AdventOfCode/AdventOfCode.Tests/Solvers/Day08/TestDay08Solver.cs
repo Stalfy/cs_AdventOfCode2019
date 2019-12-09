@@ -12,10 +12,10 @@ namespace AdventOfCode.Tests {
       Assert.That(result, Is.EqualTo(expected));
     }
 
-    // [TestCase("◻◼◼◻", new string[] { "0222112222120000"  })]
+    [TestCase("\n⬭⬬⬬⬭", new string[] { "0222112222120000"  })]
     public void TestPartTwo(string expected, string[] input) {
-      Solver s = new Day08Solver();
-      string result = s.SolvePartTwo(input);
+      Day08Solver s = new Day08Solver();
+      string result = s.SolvePartTwo(input, 4, 1);
       Assert.That(result, Is.EqualTo(expected));
     }
   }

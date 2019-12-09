@@ -26,7 +26,18 @@ namespace AdventOfCode.Solvers {
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      return SolvePartTwo(input, 25, 6);
+    }
+
+    public string SolvePartTwo(string[] input, int width, int height) {
+      string data = input[0];
+
+      LayerManager lm = new LayerManager();
+      List<string> layers = lm.CreateLayers(data, width, height).ToList();
+      string flatLayer = lm.FlattenLayers(layers);
+      List<string> output = lm.FormatLayer(flatLayer, width);
+
+      return "\n" + string.Join("\n", output);
     }
   }
 }
