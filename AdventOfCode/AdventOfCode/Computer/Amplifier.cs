@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Computer {
   public class Amplifier : IntcodeComputer {
-    private int Phase;
+    private long Phase;
     private bool Interrupt;
 
-    public Amplifier(int[] program, int phase) : base(program) {
+    public Amplifier(long[] program, long phase) : base(program) {
       Phase = phase;
       Interrupt = false;
-      operations[3] = PhaseOperation;
+      Operations[3] = PhaseOperation;
     }
 
-    private void PhaseOperation(int[] modes) {
-      _Program[_Program[Idx + 1]] = Phase;
-      operations[3] = BlockingInputOperation;
+    private void PhaseOperation(long[] modes) {
+      Store(Idx + 1, Phase, modes[0]);
+      Operations[3] = BlockingInputOperation;
 
       Idx += 2;
     }
 
-    private void BlockingInputOperation(int[] modes) {
+    private void BlockingInputOperation(long[] modes) {
       if (Interrupt && Phase >= 5) {
         CurrentState = State.Paused;
         Interrupt = false;

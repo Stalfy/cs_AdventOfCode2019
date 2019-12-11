@@ -11,8 +11,8 @@ namespace AdventOfCode.Solvers {
       List<string> permutations = new List<string>();
       GetPermutations("01234", "", permutations);
 
-      int maxOutput = -1;
-      int[] program = input[0].Split(",").Select(x => Int32.Parse(x)).ToArray();
+      long maxOutput = -1;
+      long[] program = input[0].Split(",").Select(x => Int64.Parse(x)).ToArray();
       foreach (string permutation in permutations) {
         maxOutput = Math.Max(maxOutput, Amplify(permutation, program));
       }
@@ -24,8 +24,8 @@ namespace AdventOfCode.Solvers {
       List<string> permutations = new List<string>();
       GetPermutations("56789", "", permutations);
 
-      int maxOutput = -1;
-      int[] program = input[0].Split(",").Select(x => Int32.Parse(x)).ToArray();
+      long maxOutput = -1;
+      long[] program = input[0].Split(",").Select(x => Int64.Parse(x)).ToArray();
       foreach (string permutation in permutations) {
         maxOutput = Math.Max(maxOutput, Amplify(permutation, program));
       }
@@ -44,12 +44,12 @@ namespace AdventOfCode.Solvers {
       }
     }
 
-    private int Amplify(string phases, int[] program) {
-      IntcodeComputer ampA = new Amplifier((int[]) program.Clone(), (int) Char.GetNumericValue(phases[0]));
-      IntcodeComputer ampB = new Amplifier((int[]) program.Clone(), (int) Char.GetNumericValue(phases[1]));
-      IntcodeComputer ampC = new Amplifier((int[]) program.Clone(), (int) Char.GetNumericValue(phases[2]));
-      IntcodeComputer ampD = new Amplifier((int[]) program.Clone(), (int) Char.GetNumericValue(phases[3]));
-      IntcodeComputer ampE = new Amplifier((int[]) program.Clone(), (int) Char.GetNumericValue(phases[4]));
+    private long Amplify(string phases, long[] program) {
+      IntcodeComputer ampA = new Amplifier((long[]) program.Clone(), (long) Char.GetNumericValue(phases[0]));
+      IntcodeComputer ampB = new Amplifier((long[]) program.Clone(), (long) Char.GetNumericValue(phases[1]));
+      IntcodeComputer ampC = new Amplifier((long[]) program.Clone(), (long) Char.GetNumericValue(phases[2]));
+      IntcodeComputer ampD = new Amplifier((long[]) program.Clone(), (long) Char.GetNumericValue(phases[3]));
+      IntcodeComputer ampE = new Amplifier((long[]) program.Clone(), (long) Char.GetNumericValue(phases[4]));
 
       ampA.Input = 0;
       while (ampE.CurrentState != IntcodeComputer.State.Halted) {

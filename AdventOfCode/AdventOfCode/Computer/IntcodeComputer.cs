@@ -5,125 +5,189 @@ namespace AdventOfCode.Computer {
   public class IntcodeComputer {
     public enum State { Idle, Running, Paused, Halted };
 
-    private Dictionary<int, Func<int, int>> getters;
+    private long RelativeBase;
+    private Dictionary<long, Func<long, long>> Getters;
+    private Dictionary<long, Action<long, long>> Setters;
 
-    protected int Idx;
-    protected int[] _Program;
-    protected Dictionary<int, Action<int[]>> operations;
+    protected long Idx;
+    protected long[] _Program;
+    protected Dictionary<long, Action<long[]>> Operations;
 
     public State CurrentState { get; set; }
-    public int Input { get; set; }
-    public int Output { get; set; }
+    public long Input { get; set; }
+    public long Output { get; set; }
 
-    public IntcodeComputer(int[] program) {
-      operations = new Dictionary<int, Action<int[]>>(); 
-      operations.Add(1, AddOperation);
-      operations.Add(2, MultiplyOperation);
-      operations.Add(3, InputOperation);
-      operations.Add(4, OutputOperation);
-      operations.Add(5, JumpIfTrueOperation);
-      operations.Add(6, JumpIfFalseOperation);
-      operations.Add(7, LessThanOperation);
-      operations.Add(8, EqualsOperation);
-      operations.Add(99, HaltOperation);
+    public IntcodeComputer(long[] program) {
+      Operations = new Dictionary<long, Action<long[]>>(); 
+      Operations.Add(1, AddOperation);
+      Operations.Add(2, MultiplyOperation);
+      Operations.Add(3, InputOperation);
+      Operations.Add(4, OutputOperation);
+      Operations.Add(5, JumpIfTrueOperation);
+      Operations.Add(6, JumpIfFalseOperation);
+      Operations.Add(7, LessThanOperation);
+      Operations.Add(8, EqualsOperation);
+      Operations.Add(9, RelativeBaseOffsetOperation);
+      Operations.Add(99, HaltOperation);
 
-      getters = new Dictionary<int, Func<int, int>>(); 
-      getters.Add(0, PositionModeGetter);
-      getters.Add(1, ImmediateModeGetter);
+      Getters = new Dictionary<long, Func<long, long>>(); 
+      Getters.Add(0, PositionModeGetter);
+      Getters.Add(1, ImmediateModeGetter);
+      Getters.Add(2, RelativeModeGetter);
+
+      Setters = new Dictionary<long, Action<long, long>>(); 
+      Setters.Add(0, PositionModeSetter);
+      Setters.Add(1, ImmediateModeSetter);
+      Setters.Add(2, RelativeModeSetter);
 
       _Program = program;
       CurrentState = State.Idle;
-      Output = 0;
+
       Idx = 0;
+      RelativeBase = 0;
+
+      Output = 0;
       Input = 0;
     }
 
-    public IntcodeComputer(int[] program, int input) : this(program) {
+    public IntcodeComputer(long[] program, long input) : this(program) {
       Input = input;
     }
 
     public void Run() {
-      int opcode = 0;
-      int[] parameterModes = new int[2];
+      long opcode = 0;
+      long[] parameterModes = new long[3];
 
       CurrentState = State.Running;
       while (State.Running == CurrentState) {
         opcode = ParseOpcode(parameterModes);
-        operations[opcode](parameterModes);
+        Operations[opcode](parameterModes);
       }
     }
 
-    private int ParseOpcode(int[] parameterModes) {
+    protected long Retrieve(long idx, long mode) {
+
+      return Getters[mode](idx);
+    }
+
+    private long PositionModeGetter(long idx) {
+      if (_Program[idx] + 1 > _Program.Length) {
+        Array.Resize(ref _Program, (int) _Program[idx] + 1);
+      }
+
+      return _Program[_Program[idx]];
+    }
+
+    private long ImmediateModeGetter(long idx) {
+      return _Program[idx];
+    }
+
+    private long RelativeModeGetter(long idx) {
+      if (RelativeBase + _Program[idx] + 1 > _Program.Length) {
+        Array.Resize(ref _Program, (int) (RelativeBase + _Program[idx] + 1));
+      }
+
+      return _Program[RelativeBase + _Program[idx]];
+    }
+
+    protected void Store(long idx, long v, long mode) {
+      if (idx > _Program.Length) {
+        Array.Resize(ref _Program, (int) idx);
+      }
+
+      Setters[mode](idx, v);
+    }
+
+    private void PositionModeSetter(long idx, long v) {
+      if (_Program[idx] + 1> _Program.Length) {
+        Array.Resize(ref _Program, (int) _Program[idx] + 1);
+      }
+
+      _Program[_Program[idx]] = v;
+    }
+
+    private void ImmediateModeSetter(long idx, long v) {
+      _Program[idx] = v;
+    }
+
+    private void RelativeModeSetter(long idx, long v) {
+      if (RelativeBase + _Program[idx] + 1> _Program.Length) {
+        Array.Resize(ref _Program, (int) (RelativeBase + _Program[idx] + 1));
+      }
+
+      _Program[RelativeBase + _Program[idx]] = v;
+    }
+
+    private long ParseOpcode(long[] parameterModes) {
         parameterModes[0] = (_Program[Idx] / 100) % 10;
         parameterModes[1] = (_Program[Idx] / 1000) % 10;
+        parameterModes[2] = (_Program[Idx] / 10000) % 10;
     
         return _Program[Idx] % 100;
     }
 
-    private void AddOperation(int[] modes) {
-      int a = getters[modes[0]](Idx + 1);
-      int b = getters[modes[1]](Idx + 2);
-      _Program[_Program[Idx + 3]] =  a + b;
+    private void AddOperation(long[] modes) {
+      long a = Retrieve(Idx + 1, modes[0]);
+      long b = Retrieve(Idx + 2, modes[1]);
+      Store(Idx + 3, a + b, modes[2]);
 
       Idx += 4;
     }
 
-    private void MultiplyOperation(int[] modes) {
-      int a = getters[modes[0]](Idx + 1);
-      int b = getters[modes[1]](Idx + 2);
-      _Program[_Program[Idx + 3]] =  a * b;
+    private void MultiplyOperation(long[] modes) {
+      long a = Retrieve(Idx + 1, modes[0]);
+      long b = Retrieve(Idx + 2, modes[1]);
+      Store(Idx + 3,  a * b, modes[2]);
 
       Idx += 4;
     }
 
-    protected void InputOperation(int[] modes) {
-      _Program[_Program[Idx + 1]] = Input;
+    protected void InputOperation(long[] modes) {
+      Store(Idx + 1, Input, modes[0]);
       
       Idx += 2;
     }
 
-    private void OutputOperation(int[] modes) {
-      Output = getters[modes[0]](Idx + 1);
+    private void OutputOperation(long[] modes) {
+      Output = Retrieve(Idx + 1, modes[0]);
       
       Idx += 2;
     }
 
-    private void JumpIfTrueOperation(int[] modes) {
-      int v = getters[modes[0]](Idx + 1);
-      Idx = (0 != v) ? getters[modes[1]](Idx + 2) : Idx + 3;
+    private void JumpIfTrueOperation(long[] modes) {
+      long v = Retrieve(Idx + 1, modes[0]);
+      Idx = (0 != v) ? Retrieve(Idx + 2, modes[1]) : Idx + 3;
     }
 
-    private void JumpIfFalseOperation(int[] modes) {
-      int v = getters[modes[0]](Idx + 1);
-      Idx = (0 == v) ? getters[modes[1]](Idx + 2) : Idx + 3;
+    private void JumpIfFalseOperation(long[] modes) {
+      long v = Retrieve(Idx + 1, modes[0]);
+      Idx = (0 == v) ? Retrieve(Idx + 2, modes[1]) : Idx + 3;
     }
 
-    private void LessThanOperation(int[] modes) {
-      int a = getters[modes[0]](Idx + 1);
-      int b = getters[modes[1]](Idx + 2);
-      _Program[_Program[Idx + 3]] = Convert.ToInt32(a < b);
+    private void LessThanOperation(long[] modes) {
+      long a = Retrieve(Idx + 1, modes[0]);
+      long b = Retrieve(Idx + 2, modes[1]);
+      Store(Idx + 3, Convert.ToInt32(a < b), modes[2]);
 
       Idx += 4;
     }
 
-    private void EqualsOperation(int[] modes) {
-      int a = getters[modes[0]](Idx + 1);
-      int b = getters[modes[1]](Idx + 2);
-      _Program[_Program[Idx + 3]] = Convert.ToInt32(a == b);
+    private void EqualsOperation(long[] modes) {
+      long a = Retrieve(Idx + 1, modes[0]);
+      long b = Retrieve(Idx + 2, modes[1]);
+      Store(Idx + 3, Convert.ToInt32(a == b), modes[2]);
 
       Idx += 4;
     }
 
-    private void HaltOperation(int[] modes) { 
+    private void RelativeBaseOffsetOperation(long[] modes) {
+      RelativeBase += Retrieve(Idx + 1, modes[0]);
+      
+      Idx += 2;
+    }
+
+    private void HaltOperation(long[] modes) { 
       CurrentState = State.Halted;
-    }
-
-    private int PositionModeGetter(int idx) {
-      return _Program[_Program[idx]];
-    }
-
-    private int ImmediateModeGetter(int idx) {
-      return _Program[idx];
     }
   }
 }
