@@ -16,6 +16,8 @@ mkdir -p $TEST_DIR
 
 # Create solver file.
 echo "using System;"                                    >> $SOLVER_PATH
+echo "using System.Collections.Generic;"                >> $SOLVER_PATH
+echo "using System.Linq;"                               >> $SOLVER_PATH
 echo ""                                                 >> $SOLVER_PATH
 echo "namespace AdventOfCode.Solvers {"                 >> $SOLVER_PATH
 echo "  public class Day$1Solver : Solver {"            >> $SOLVER_PATH
