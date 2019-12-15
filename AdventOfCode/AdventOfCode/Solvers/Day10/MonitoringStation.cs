@@ -10,69 +10,75 @@ namespace AdventOfCode.Solvers.Day10 {
       Asteroid bestAsteroid = new Asteroid(-1, -1);
       bestDlosCount = 0;
 
-      int maxAllowedViewBlocks = asteroids.Count;
       int dlosCount = 0;
       foreach (Asteroid candidate in asteroids) {
-        dlosCount = CountDLOS(candidate, asteroids, maxAllowedViewBlocks);
+        dlosCount = CountDLOS(candidate, asteroids);
 
-        if (dlosCount > bestDlosCount) {
-          bestDlosCount = dlosCount;
-          maxAllowedViewBlocks = asteroids.Count - dlosCount;
+        if(dlosCount > bestDlosCount) {
           bestAsteroid = candidate;
+          bestDlosCount = dlosCount;
         }
       }
 
       return bestAsteroid;
     }
 
-    private int CountDLOS(Asteroid home, List<Asteroid> asteroids, int maxViewBlocks) {
-      int count = asteroids.Count - 1;
-      int viewBlocks = 0;
-      int minX;
-      int maxX;
-      int minY;
-      int maxY;
+    public Asteroid Vaporize(Asteroid home, List<Asteroid> asteroids, int toVaporize) {
+      int decimals = 6;
+      foreach (Asteroid ast in asteroids) {
+        ast.Radius = Math.Round(Distance(home.X,  home.Y, ast.X, ast.Y), decimals);
 
-      foreach (Asteroid target in asteroids) {
-        minX = Math.Min(home.X, target.X);
-        maxX = Math.Max(home.X, target.X);
-        minY = Math.Min(home.Y, target.Y);
-        maxY = Math.Max(home.Y, target.Y);
+        ast.RadiansAngle = Angle(home.X, home.Y, ast.X, ast.Y); 
+        ast.RadiansAngle = (ast.RadiansAngle + Math.PI / 2) % (2 * Math.PI);
+        ast.RadiansAngle = Math.Round(ast.RadiansAngle, decimals);
+      }
 
-        int viewBlockingAsteroids = asteroids
-          .Where(a => a.X >= minX
-              && a.X <= maxX
-              && a.Y >= minY
-              && a.Y <= maxY
-              && Distance(home, a) != 0
-              && Distance(target, a) != 0
-              && BlocksView(home, a, target))
-          .ToList()
-          .Count;
+      List<List<Asteroid>> groups = asteroids
+        .OrderBy(a => a.RadiansAngle)
+        .ThenBy(a => a.Radius)
+        .GroupBy(a => a.RadiansAngle)
+        .Select(grp => grp.ToList())
+        .ToList();
 
-        if(0 < viewBlockingAsteroids) {
-          count--;
-          viewBlocks++;
+      List<Asteroid> grp;
+      Asteroid vaporizedAsteroid = new Asteroid(-1, -1);
+      int vaporizedAsteroids = 0;
+      while(groups.Count > 0 && vaporizedAsteroids < toVaporize) {
+        for(int i = 0; i < groups.Count && vaporizedAsteroids < toVaporize; i++) {
+          grp = groups[i];
+          vaporizedAsteroid = grp[0];
+          grp.Remove(vaporizedAsteroid);
+
+          vaporizedAsteroids++;
         }
 
-        if(viewBlocks >= maxViewBlocks) {
-          return 0;
+        groups = groups.Where(grp => grp.Count != 0).ToList();
+      }
+
+      return vaporizedAsteroid;
+    }
+
+    private int CountDLOS(Asteroid home, List<Asteroid> asteroids) {
+      int decimals = 6;
+      foreach (Asteroid ast in asteroids) {
+        ast.Radius = Math.Round(Distance(home.X,  home.Y, ast.X, ast.Y), decimals);
+
+        if(ast.Radius > 0.000) {
+          ast.RadiansAngle = Math.Round(Angle(home.X, home.Y, ast.X, ast.Y), decimals); 
+        } else {
+          ast.RadiansAngle = Math.Round(-10.000, decimals);
         }
       }
 
-      return count;
+      return asteroids.Select(ast => ast.RadiansAngle).Distinct().ToList().Count - 1;
     }
 
-    private bool BlocksView(Asteroid home, Asteroid center, Asteroid target) {
-      double delta = Math.Abs(Distance(home, center) 
-          + Distance(center, target) 
-          - Distance(home, target));
-
-      return delta < 0.0000001;
+    public double Distance(double x1, double y1, double x2, double y2) {
+      return Math.Pow(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2), 0.5);
     }
 
-    private double Distance(Asteroid a, Asteroid b) {
-      return Math.Pow(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2), 0.5);
+    public double Angle(double x1, double y1, double x2, double y2) {
+      return (Math.Atan2((y2 - y1), (x2 - x1)) + (2 * Math.PI)) % (2 * Math.PI);
     }
   }
 }

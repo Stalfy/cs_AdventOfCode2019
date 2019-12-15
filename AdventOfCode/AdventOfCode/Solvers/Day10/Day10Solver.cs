@@ -16,7 +16,20 @@ namespace AdventOfCode.Solvers {
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      return SolvePartTwo(input, 200, 26, 29);
+    }
+
+    public string SolvePartTwo(string[] input, int toVaporize, int x, int y) {
+      List<Asteroid> asteroids = GetAsteroidCoordinates(input);
+
+      int index = asteroids.FindIndex(a => a.X == x && a.Y == y);
+      Asteroid center = asteroids[index];
+      asteroids.RemoveAt(index);
+
+      MonitoringStation ms = new MonitoringStation();
+      Asteroid lastVaporizedAsteroid = ms.Vaporize(center, asteroids, toVaporize);
+
+      return (lastVaporizedAsteroid.X * 100 + lastVaporizedAsteroid.Y).ToString();
     }
 
     private List<Asteroid> GetAsteroidCoordinates(string[] input) {
