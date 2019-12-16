@@ -148,7 +148,7 @@ namespace AdventOfCode.Computer {
       Idx += 2;
     }
 
-    private void OutputOperation(long[] modes) {
+    protected void OutputOperation(long[] modes) {
       Output = Retrieve(Idx + 1, modes[0]);
       
       Idx += 2;
