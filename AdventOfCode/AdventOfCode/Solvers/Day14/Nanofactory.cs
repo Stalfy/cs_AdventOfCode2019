@@ -14,11 +14,11 @@ namespace AdventOfCode.Solvers.Day14 {
 
       List<Chemical> inputs = inOutSplit[0].Split(", ")
         .Select(input => input.Split(" "))
-        .Select(input => new Chemical(Int32.Parse(input[0]), input[1]))
+        .Select(input => new Chemical(Int64.Parse(input[0]), input[1]))
         .ToList();
 
       string[] outputSplit = inOutSplit[1].Split(" ");
-      Chemical output = new Chemical(Int32.Parse(outputSplit[0]), outputSplit[1]);
+      Chemical output = new Chemical(Int64.Parse(outputSplit[0]), outputSplit[1]);
 
       return new Reaction(inputs, output);
     }
@@ -54,7 +54,7 @@ namespace AdventOfCode.Solvers.Day14 {
       Chemical input = a.Inputs.Find(x => x.Name == b.Output.Name);
       decimal inputUnits = Convert.ToDecimal(input.Units);
       decimal outputUnits = Convert.ToDecimal(b.Output.Units);
-      int ratio = Decimal.ToInt32(Math.Ceiling(inputUnits / outputUnits));
+      long ratio = Decimal.ToInt64(Math.Ceiling(inputUnits / outputUnits));
 
       a.Inputs.Remove(input);
       a.Inputs.AddRange(b.Inputs.Select(x => new Chemical(x.Units * ratio, x.Name)));
