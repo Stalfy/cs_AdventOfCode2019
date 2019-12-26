@@ -7,15 +7,6 @@ using AdventOfCode.Computer;
 
 namespace AdventOfCode.Solvers {
   public class Day15Solver : Solver {
-    const long NORTH = 1;
-    const long SOUTH = 2;
-    const long WEST  = 3;
-    const long EAST  = 4;
-
-    const long WALL = 0;
-    const long MOVE = 1;
-    const long DEST = 2;
-
     public string SolvePartOne(string[] input) {
       long[] program = string.Join(",", input)
         .Split(",")
@@ -23,85 +14,98 @@ namespace AdventOfCode.Solvers {
         .ToArray();
 
       RepairDroid droid = new RepairDroid(program);
-      return GetShortestRoute(droid).ToString();
+      Dictionary<Point, long> tankMap = droid.MapOxygenTank();
+      Dictionary<Point, int> distances = FillWithOxygen(tankMap);
+     
+      return distances[new Point(0, 0)].ToString();
     }
 
     public string SolvePartTwo(string[] input) {
-      return "";
+      long[] program = string.Join(",", input)
+        .Split(",")
+        .Select(x => Int64.Parse(x))
+        .ToArray();
+
+      RepairDroid droid = new RepairDroid(program);
+      Dictionary<Point, long> tankMap = droid.MapOxygenTank();
+      Dictionary<Point, int> distances = FillWithOxygen(tankMap);
+
+      return distances.Select(e => e.Value).ToArray().Max().ToString();
     }
 
-    public int GetShortestRoute(RepairDroid droid) {
-      int bestLength = Int32.MaxValue;
-      Point position = new Point(0, 0);
-      List<Point> route = new List<Point>();
+    public Dictionary<Point, int> FillWithOxygen(Dictionary<Point, long> map) {
+      List<Point> elementsToAdd = map
+        .Where(e => e.Value == RepairDroid.FLOOR)
+        .Select(e => e.Key).ToList();
 
-      route.Add(position);
-      bestLength = Math.Min(bestLength, ExploreAllDirections(droid, position, route, bestLength));
+      Point oxygenPoint = map
+        .Where(e => e.Value == RepairDroid.DEST)
+        .Select(e => e.Key)
+        .First();
+      
+      Dictionary<Point, int> positions = new Dictionary<Point, int>();
+      positions[oxygenPoint] = 0;
 
-      return bestLength;
-    }
+      while(elementsToAdd.Count != 0) {
+        for(int i = 0; i < elementsToAdd.Count; ) {
+          int lowestDistance = Int32.MaxValue;
+          int distance = 0;
 
-    public int GetShortestRoute(RepairDroid droid, Point pos, List<Point> route, int bestLength) {
-      if(route.Contains(pos)) {
-        return bestLength;
+          Point p = new Point(elementsToAdd[i].X - 1, elementsToAdd[i].Y);
+          if(positions.TryGetValue(p, out distance)) {
+            lowestDistance = Math.Min(lowestDistance, distance + 1);
+          }
+
+          p = new Point(elementsToAdd[i].X + 1, elementsToAdd[i].Y);
+          if(positions.TryGetValue(p, out distance)) {
+            lowestDistance = Math.Min(lowestDistance, distance + 1);
+          }
+
+          p = new Point(elementsToAdd[i].X, elementsToAdd[i].Y - 1);
+          if(positions.TryGetValue(p, out distance)) {
+            lowestDistance = Math.Min(lowestDistance, distance + 1);
+          }
+
+          p = new Point(elementsToAdd[i].X, elementsToAdd[i].Y + 1);
+          if(positions.TryGetValue(p, out distance)) {
+            lowestDistance = Math.Min(lowestDistance, distance + 1);
+          }
+
+          if(lowestDistance != Int32.MaxValue) {
+            positions[elementsToAdd[i]] = lowestDistance;
+            elementsToAdd.RemoveAt(i);
+          } else {
+            i++;
+          }
+        }
       }
 
-      route.Add(pos);
-      bestLength = Math.Min(bestLength, ExploreAllDirections(droid, pos, route, bestLength));
-      route.Remove(pos);
-
-      return bestLength;
+      return positions;
     }
 
-    public int ExploreAllDirections(RepairDroid droid, Point origin, List<Point> route, int bestLength) {
-      int l = Explore(droid, origin, route, bestLength, NORTH, SOUTH);
-      bestLength = Math.Min(bestLength, l);
+    private void printTankMap(Dictionary<Point, long> map) {
+      int minX = map.Select(e => e.Key.X).ToArray().Min();
+      int maxX = map.Select(e => e.Key.X).ToArray().Max();
+      int minY = map.Select(e => e.Key.Y).ToArray().Min();
+      int maxY = map.Select(e => e.Key.Y).ToArray().Max();
 
-      l = Explore(droid, origin, route, bestLength, EAST, WEST);
-      bestLength = Math.Min(bestLength, l);
+      Dictionary<long, char> characters = new Dictionary<long, char>();
+      characters.Add(0, '\u25FC');
+      characters.Add(1, '\u25FB');
+      characters.Add(2, 'O');
+      characters.Add(3, 'X');
 
-      l = Explore(droid, origin, route, bestLength, SOUTH, NORTH);
-      bestLength = Math.Min(bestLength, l);
+      map[new Point(0, 0)] = 3;
 
-      l = Explore(droid, origin, route, bestLength, WEST, EAST);
-      bestLength = Math.Min(bestLength, l);
+      long val = 0;
+      for(int y = minY; y <= maxY; y++) {
+        for(int x = minX; x <= maxX; x++) {
+          map.TryGetValue(new Point(x, y), out val);
+          Console.Write(characters[val]);
+        } 
 
-      return bestLength;
-    }
-
-    public int Explore(RepairDroid droid, Point pos, List<Point> route, int bestLength, long direction, long oppositeDirection) {
-      Point move = GetNextPosition(pos, direction);
-      long reply = droid.Move(direction);
-      switch(reply) {
-        case DEST:
-          bestLength = Math.Min(route.Count, bestLength);
-          droid.Move(oppositeDirection);
-          break;
-        case MOVE:
-          int length = GetShortestRoute(droid, move, route, bestLength);
-          bestLength = Math.Min(bestLength, length);
-          droid.Move(oppositeDirection);
-          break;
-        case WALL:
-          break;
+        Console.WriteLine();
       }
-
-      return bestLength;
-    }
-
-    public Point GetNextPosition(Point position, long direction) {
-      switch(direction) {
-        case NORTH:
-          return new Point(position.X, position.Y - 1);
-        case SOUTH:
-          return new Point(position.X, position.Y + 1);
-        case EAST:
-          return new Point(position.X + 1, position.Y);
-        case WEST:
-          return new Point(position.X - 1, position.Y);
-      }
-
-      return new Point(0, 0);
     }
   }
 }
